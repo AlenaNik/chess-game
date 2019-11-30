@@ -46,7 +46,7 @@ function can_move( sx, sy, dx, dy) {
                 return false;
             return is_correct_move(sx, sy, dx, dy);
 }
-
+// if the cell is not on map, and return empty
 function is_empty (x, y) {
     if(!on_map (x, y)) return false;
     return map [ x ] [ y ] == " ";
@@ -95,15 +95,25 @@ function is_correct_queen_move (sx, sy, dx, dy) {
     return true;
 }
 function is_correct_bishop_move (sx, sy, dx, dy) {
-   let changing_x = Math.sign (dx - sx);
-   let changing_y = Math.sign (dy - sy);
-   if (Math.abs (changing_x) + Math.abs(changing_y) != 1)
+    // it moves vertically and horizontally
+    // if we move up, y is bigger, x is the same
+    // if we are going left and right x is changin, y is the same
+    let changing_x = 0;
+    let changing_y = 0;
+    if (dx > sx) changing_x = +1;
+    if (dx < sx) changing_y = -1;
+    if (dy > sy) changing_y = +1;
+    if (dy < sy) changing_y = -1;
+// move diagonally
+   if (Math.abs (changing_x) + Math.abs(changing_y) != 2)
        return false;
-   do
-   { sx += changing_x;
-     sy += changing_y;
-   } while (is_empty (sx, sy))
- return false;
+    do {
+        sx += changing_x;
+        sy += changing_y;
+        if (sx == dx && sy == dy) // final of board
+            return true;
+    }  while (is_empty(sx, sy))
+    return false;
 }
 
 function is_correct_knight_move (sx, sy, dx, dy) {
@@ -129,11 +139,10 @@ function is_correct_rook_move (sx, sy, dx, dy) {
         sy += changing_y;
         if (sx == dx && sy == dy) // final of board
             return true;
-        if (map [sx] [sy] != " ")
-            return false;
-    }  while (on_map(sx, sy))
-        return true;
+    }  while (is_empty(sx, sy))
+        return false;
 }
+
 function is_correct_pawn_move (sx, sy, dx, dy) {
     return true;
 }
