@@ -1,5 +1,6 @@
-let map = Array ();
-let inf = Array ();
+// global variables for matrix
+let map = Array (7);
+let inf = Array (7);
 
 let move_color = "white";
 let move_from_x;
@@ -34,30 +35,95 @@ function init_inf() {
             [" ", " ", " ", " ", " ", " ", " ", " "],
         ];
 }
+// func that sets condition if figure can move
+// s - source
+// d - destination
+function can_move( sx, sy, dx, dy) {
+    // checking if can moves
+            if (!can_move_from(sx, sy)
+            && (!can_move_to(dx, dy))
+            && (!is_correct_move (sx, sy, dx, dy)))
+            return false;
+    return true;
+}
+
+// correct move! important func where all moves for figures are
+function is_correct_move (sx, sy, dx, dy) {
+    let figure = map [sx ] [ sy ];
+    if (is_king (figure))
+        return is_correct_king_move (sx, sy, dx, dy);
+    if (is_queen (figure))
+        return is_correct_queen_move (sx, sy, dx, dy);
+    if (is_bishop (figure))
+        return is_correct_bishop_move (sx, sy, dx, dy);
+    if (is_knight (figure))
+        return is_correct_knight_move (sx, sy, dx, dy);
+    if (is_rook (figure))
+        return is_correct_rook_move (sx, sy, dx, dy);
+    if (is_pawn (figure))
+        return is_correct_pawn_move (sx, sy, dx, dy);
+    return true;
+}
+// king function
+function is_king(figure) {
+
+}
+// queen func
+function is_queen(figure) {
+
+}
+// bishop func
+function is_bishop(figure) {
+
+}
+// knight func
+function is_knight(figure) {
+
+}
+
+//rook func
+function is_rook(figure) {
+
+}
+// pawn func
+function is_pawn(figure) {
+
+}
+
+
+
+
+
 // func that checks all matrix and sees if we can move FROM (1)
 // from the cell
 function mark_moves_from() {
     init_inf();
-    for (let x = 0; x <= 7; x++)
-        for (let y = 0; y <= 7; y++)
-            if (can_move_from (x, y))
-                // you you can move FROM that sell, put 1 (TO is going to be two)
-                inf [x] [y] = 1;
+    for (let sx = 0; sx <= 7; sx++)
+        for (let sy = 0; sy <= 7; sy++)
+            for (let dx = 0; dx <= 7; dx++)
+                for (let dy = 0; dy <= 7; dy++)
+                    // if we can move from sx sy to any other dx dy
+                    if (can_move (sx, sy, dx, dy))
+                    // you you can move FROM that cell, put 1 (TO is going to be two)
+                        inf [sx] [sy] = 1;
 }
 
 // func that: 1) clears inif_inf, than checkes if we can move TO (2)
+// s - source where we are moving from
+// d - destination where we are  moving to
 function mark_moves_to() {
     init_inf();
     for (let x = 0; x <= 7; x++)
         for (let y = 0; y <= 7; y++)
-            if (can_move_to (x, y))
-            // you you can move FROM that sell, put 1 (TO is going to be two)
+                    // if we can move from sx sy to any other dx dy
+                 if (can_move (move_from_x, move_from_y, x, y))
+            // you you can move TO that cell, put 2
                 inf [x] [y] = 2;
 }
 
 function can_move_from(x, y) {
     // if it's the same color, we can move
-   return (get_color (x, y) === move_color)
+   return (get_color (x, y) == move_color)
 }
 function can_move_to(x, y) {
     // white figure can only fo on empty cell of on black figure
@@ -73,7 +139,7 @@ function get_color(x, y) {
         return "";
     // since we know that the upper case is white, we check if
     // figure is equal to itself, so it's white
-    return (figure.toUpperCase() === figure) ? "white" : "black";
+    return (figure.toUpperCase() == figure) ? "white" : "black";
 }
 
 function click_box (x, y) {
@@ -94,7 +160,16 @@ function click_box_from (x, y) {
     show_map();
 }
 function click_box_to (x, y) {
-
+    map [x] [y] = map [move_from_x] [move_from_y];
+    // empty the cell where the figure is coming from
+    map [move_from_x] [move_from_y] = " ";
+    turn_change();
+    show_map();
+    mark_moves_from();
+}
+// func that changes turn by checking color
+function turn_change() {
+    move_color = (move_color == "white") ? "black" : "white";
 }
 
 function show_map() {
@@ -105,13 +180,13 @@ function show_map() {
         layout += "<tr>";
         layout += "<td>" + y + "</td>";
         for (let x = 0; x <= 7; x++) {
-            if (inf [x] [y] === " ")
+            if (inf [x] [y] == " ")
                 color = (x + y) % 2 ? "white" : "grey";
             else
-                color = inf[x] [y] === "1" ? "#febaba" : "#62F9FE";
+                color = inf[x] [y] == "1" ? "#febaba" : "#62F9FE";
             layout += "<td class='board' style='background-color: " + color +
                //Coordinated of x and y at the moment of click
-                "' onclick='click_box(" + x + ", " + y + ");'>";
+                "' onclick='click_box(" + x + ", " + y + "); '>";
             layout += map [x] [y];
                layout += "</td>";
         }
