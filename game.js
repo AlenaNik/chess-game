@@ -211,8 +211,8 @@ function can_move_to(x, y) {
 // check the color of the figure: black, white or empty
 function get_color(x, y) {
     let figure = map [x] [y];
-    if (figure === '')
-        return "";
+    if (figure == '')
+        return " ";
     // since we know that the upper case is white, we check if
     // figure is equal to itself, so it's white
     return (figure.toUpperCase() == figure) ? "white" : "black";
@@ -240,12 +240,13 @@ function click_box_to (x, y) {
     // empty the cell where the figure is coming from
     map [move_from_x] [move_from_y] = " ";
     turn_change();
-    show_map();
     mark_moves_from();
+    show_map();
+
 }
 // func that changes turn by checking color
 function turn_change() {
-    move_color = (move_color == "white") ? "black" : "white";
+    move_color = move_color == "white" ? "black" : "white";
 }
 
 function show_map() {
@@ -257,10 +258,10 @@ function show_map() {
         layout += "<td>" + y + "</td>";
         for (let x = 0; x <= 7; x++) {
             if (inf [x] [y] == " ")
-                color = (x + y) % 2 ? "white" : "grey";
+                color = (x + y) % 2 ? "#eeffee" : "#abcdef";
             else
-                color = inf[x] [y] == "1" ? "rgba(137,254,0,0.36)" : "#62F9FE";
-            layout += "<td class='board' style='background-color: " + color +
+                color = inf[x] [y] == "1" ? "#aaffaa" : "#ffaaaa";
+            layout += "<td class='board' style='background-color: " + color + "; " +
                //Coordinated of x and y at the moment of click
                 "' onclick='click_box(" + x + ", " + y + "); '>";
             layout += map [x] [y];
