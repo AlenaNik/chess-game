@@ -47,6 +47,14 @@ function can_move( sx, sy, dx, dy) {
             return is_correct_move(sx, sy, dx, dy);
 }
 
+function is_empty (x, y) {
+    if(!on_map (x, y)) return false;
+    return map [ x ] [ y ] == " ";
+}
+//check if we are on board
+function on_map (x, y) {
+    return (x >= 0 && x <= 7 && y >= 0 && y <= 7)
+}
 // correct move! important func where all moves for figures are
 function is_correct_move (sx, sy, dx, dy) {
     let item = map [ sx ] [ sy ];
@@ -80,23 +88,51 @@ const is_pawn = item => item.toUpperCase() == 'P';
 
 // correct movements for each figure
 function is_correct_king_move (sx, sy, dx, dy) {
+    if (Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1)
     return true;
 }
 function is_correct_queen_move (sx, sy, dx, dy) {
     return true;
 }
 function is_correct_bishop_move (sx, sy, dx, dy) {
-    return true;
+   let changing_x = Math.sign (dx - sx);
+   let changing_y = Math.sign (dy - sy);
+   if (Math.abs (changing_x) + Math.abs(changing_y) != 1)
+       return false;
+   do
+   { sx += changing_x;
+     sy += changing_y;
+   } while (is_empty (sx, sy))
+ return false;
 }
+
 function is_correct_knight_move (sx, sy, dx, dy) {
-    if (Math.abs (dx - sx) == 1 && Math.abs(dy - sy) == 2)
-        return true;
-    if (Math.abs (dx - sx) == 2 && Math.abs(dy - sy) == 1)
-        return true;
-    return false;
+    // module function to see the difference from
+    return (Math.abs (dx - sx) == 1 && Math.abs(dy - sy) == 2) ||
+     (Math.abs (dx - sx) == 2 && Math.abs(dy - sy) == 1)
 }
 function is_correct_rook_move (sx, sy, dx, dy) {
-    return true;
+    // it moves vertically and horizontally
+    // if we move up, y is bigger, x is the same
+    // if we are going left and right x is changin, y is the same
+    let changing_x = 0;
+    let changing_y = 0;
+    if (dx > sx) changing_x = +1;
+    if (dx < sx) changing_y = -1;
+    if (dy > sy) changing_y = +1;
+    if (dy < sy) changing_y = -1;
+    // the sum is only when it's two direcitional movement
+    if (Math.abs(changing_x) + Math.abs(changing_y) != 1)
+        return false;
+    do {
+        sx += changing_x;
+        sy += changing_y;
+        if (sx == dx && sy == dy) // final of board
+            return true;
+        if (map [sx] [sy] != " ")
+            return false;
+    }  while (on_map(sx, sy))
+        return true;
 }
 function is_correct_pawn_move (sx, sy, dx, dy) {
     return true;
@@ -191,7 +227,7 @@ function show_map() {
             if (inf [x] [y] == " ")
                 color = (x + y) % 2 ? "white" : "grey";
             else
-                color = inf[x] [y] == "1" ? "#febaba" : "#62F9FE";
+                color = inf[x] [y] == "1" ? "rgba(137,254,0,0.36)" : "#62F9FE";
             layout += "<td class='board' style='background-color: " + color +
                //Coordinated of x and y at the moment of click
                 "' onclick='click_box(" + x + ", " + y + "); '>";
