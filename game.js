@@ -63,7 +63,7 @@ function can_move_to(x, y) {
     // white figure can only fo on empty cell of on black figure
     if (map [x] [y] == " ")  // is it empty?
         return true;
-    return get_color (x, y) !== move_color; // is it different color?
+    return get_color (x, y) != move_color; // is it different color?
 }
 
 // check the color of the figure: black, white or empty
@@ -108,7 +108,7 @@ function show_map() {
             if (inf [x] [y] === " ")
                 color = (x + y) % 2 ? "white" : "grey";
             else
-                color = inf[x] [y] === "1" ? "green" : "#62F9FE";
+                color = inf[x] [y] === "1" ? "#febaba" : "#62F9FE";
             layout += "<td class='board' style='background-color: " + color +
                //Coordinated of x and y at the moment of click
                 "' onclick='click_box(" + x + ", " + y + ");'>";
