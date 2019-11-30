@@ -1,6 +1,6 @@
 // global variables for matrix
-let map = Array (7);
-let inf = Array (7);
+let map = Array();
+let inf = Array();
 
 let move_color = "white";
 let move_from_x;
@@ -40,59 +40,63 @@ function init_inf() {
 // d - destination
 function can_move( sx, sy, dx, dy) {
     // checking if can moves
-            if (!can_move_from(sx, sy)
-            && (!can_move_to(dx, dy))
-            && (!is_correct_move (sx, sy, dx, dy)))
-            return false;
-    return true;
+            if (!can_move_from(sx, sy))
+                return false;
+            if (!can_move_to(dx, dy))
+                return false;
+            return is_correct_move(sx, sy, dx, dy);
 }
 
 // correct move! important func where all moves for figures are
 function is_correct_move (sx, sy, dx, dy) {
-    let figure = map [sx ] [ sy ];
-    if (is_king (figure))
+    let item = map [ sx ] [ sy ];
+    if (is_king (item))
         return is_correct_king_move (sx, sy, dx, dy);
-    if (is_queen (figure))
+    if (is_queen (item))
         return is_correct_queen_move (sx, sy, dx, dy);
-    if (is_bishop (figure))
+    if (is_bishop (item))
         return is_correct_bishop_move (sx, sy, dx, dy);
-    if (is_knight (figure))
+    if (is_knight (item))
         return is_correct_knight_move (sx, sy, dx, dy);
-    if (is_rook (figure))
+    if (is_rook (item))
         return is_correct_rook_move (sx, sy, dx, dy);
-    if (is_pawn (figure))
+    if (is_pawn (item))
         return is_correct_pawn_move (sx, sy, dx, dy);
     return true;
 }
-// king function
-function is_king(figure) {
-
-}
+// functions for each figure for black and whites
+const is_king = item => item.toUpperCase() == 'K';
 // queen func
-function is_queen(figure) {
-
-}
+const is_queen = item => item.toUpperCase() == 'Q';
 // bishop func
-function is_bishop(figure) {
-
-}
+const is_bishop = item => item.toUpperCase() == 'B';
 // knight func
-function is_knight(figure) {
-
-}
-
+const is_knight = item => item.toUpperCase() == 'N';
 //rook func
-function is_rook(figure) {
-
-}
+const is_rook = item => item.toUpperCase() == 'R';
 // pawn func
-function is_pawn(figure) {
+const is_pawn = item => item.toUpperCase() == 'P';
 
+
+// correct movements for each figure
+function is_correct_king_move (sx, sy, dx, dy) {
+    return true;
 }
-
-
-
-
+function is_correct_queen_move (sx, sy, dx, dy) {
+    return true;
+}
+function is_correct_bishop_move (sx, sy, dx, dy) {
+    return true;
+}
+function is_correct_knight_move (sx, sy, dx, dy) {
+    return true;
+}
+function is_correct_rook_move (sx, sy, dx, dy) {
+    return true;
+}
+function is_correct_pawn_move (sx, sy, dx, dy) {
+    return true;
+}
 
 // func that checks all matrix and sees if we can move FROM (1)
 // from the cell
@@ -111,12 +115,12 @@ function mark_moves_from() {
 // func that: 1) clears inif_inf, than checkes if we can move TO (2)
 // s - source where we are moving from
 // d - destination where we are  moving to
-function mark_moves_to() {
+function mark_moves_to () {
     init_inf();
     for (let x = 0; x <= 7; x++)
         for (let y = 0; y <= 7; y++)
-                    // if we can move from sx sy to any other dx dy
-                 if (can_move (move_from_x, move_from_y, x, y))
+            // if we can move from sx sy to any other dx dy
+           if (can_move ( move_from_x, move_from_y, x, y))
             // you you can move TO that cell, put 2
                 inf [x] [y] = 2;
 }
