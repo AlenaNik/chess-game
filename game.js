@@ -11,7 +11,7 @@ function init_map() {
         // y0    y1    y2   y3   y4    y5    y6   y7  y8
         ["A", "", "P", "", "", "", "p", "", "a"], // x = 0 negros a la derecha!
         ["N", "B", "P", "", "", "", "p", "b", "n"], // x = 1
-        ["S", "", "", "", "", "", "p", "", "s"], // x = 2
+        ["S", "", "P", "", "", "", "p", "", "s"], // x = 2
         ["G", "", "P", "", "", "", "p", "", "g"], // x = 3
         ["K", "", "P", "", "", "", "p", "", "k"], // x = 4
         ["G", "", "P", "", "", "", "p", "", "g"], // x = 5
@@ -70,6 +70,12 @@ function is_correct_move (sx, sy, dx, dy) {
         return is_correct_knight_move (sx, sy, dx, dy);
     if (is_rook (item))
         return is_correct_rook_move (sx, sy, dx, dy);
+    if (is_arrow (item))
+        return is_correct_arrow_move (sx, sy, dx, dy);
+    if (is_silver (item))
+        return is_correct_silver_move (sx, sy, dx, dy);
+    if (is_gold (item))
+        return is_correct_gold_move (sx, sy, dx, dy);
     if (is_pawn (item))
         return is_correct_pawn_move (sx, sy, dx, dy);
     return true;
@@ -86,7 +92,12 @@ const is_knight = item => item.toUpperCase() == 'N';
 const is_rook = item => item.toUpperCase() == 'R';
 // pawn func
 const is_pawn = item => item.toUpperCase() == 'P';
-
+// arrow func
+const is_arrow = item => item.toUpperCase() == 'A';
+// gold func
+const is_gold = item => item.toUpperCase() == 'G';
+// silver func
+const is_silver = item => item.toUpperCase() == 'S';
 
 // correct movements for each figure
 function is_correct_king_move (sx, sy, dx, dy) {
@@ -126,7 +137,7 @@ function is_correct_bishop_move (sx, sy, dx, dy) {
         sy += changing_y;
         if (sx == dx && sy == dy) // final of board
             return true;
-    }  while (is_empty(sx, sy))
+    }  while (is_empty(sx, sy));
     return false;
 }
 
@@ -153,15 +164,49 @@ function is_correct_rook_move (sx, sy, dx, dy) {
         sy += changing_y;
         if (sx == dx && sy == dy) // final of board
             return true;
-    }  while (is_empty(sx, sy))
-        return false;
+    } while (is_empty(sx, sy));
+    return false;
 }
+// arrow only moves forward
+function is_correct_arrow_move (sx, sy, dx, dy) {
+
+ return true;
+}
+// gold only moves forward
+function is_correct_gold_move (sx, sy, dx, dy) {
+    let changing_x = 0;
+    let changing_y = 0;
+    if (dx > sx) changing_x = +1;
+    if (dx < sx) changing_x = -1;
+    if (dy > sy) changing_y = +1;
+    if (dy < sy) changing_y = -1;
+    // the sum is only when it's two direcitional movement
+    if (Math.abs(changing_x) + Math.abs(changing_y) != 1 && Math.abs (changing_x) + Math.abs(changing_y) != 2)
+        return false;
+    do {
+        sx += changing_x;
+        sy += changing_y;
+        if (sx == dx && sy == dy) // final of board
+            return true;
+        if (map [sx] [sy] != " ")
+            return false;
+    }  while (on_map(sx, sy));
+    return true;
+}
+
+// silver only moves forward
+function is_correct_silver_move (sx, sy, dx, dy) {
+    if (Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1)
+        return true;
+}
+
+
 // pawn only moves forward
 function is_correct_pawn_move (sx, sy, dx, dy) {
     let changing_x = 0;
     let changing_y = 0;
     if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_y = -1;
+    if (dx < sx) changing_x = -1;
     if (dy > sy) changing_y = +1;
     if (dy < sy) changing_y = -1;
     do {
