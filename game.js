@@ -89,7 +89,11 @@ function is_correct_bishop_move (sx, sy, dx, dy) {
     return true;
 }
 function is_correct_knight_move (sx, sy, dx, dy) {
-    return true;
+    if (Math.abs (dx - sx) == 1 && Math.abs(dy - sy) == 2)
+        return true;
+    if (Math.abs (dx - sx) == 2 && Math.abs(dy - sy) == 1)
+        return true;
+    return false;
 }
 function is_correct_rook_move (sx, sy, dx, dy) {
     return true;
