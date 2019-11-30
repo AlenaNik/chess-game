@@ -92,7 +92,19 @@ function is_correct_king_move (sx, sy, dx, dy) {
     return true;
 }
 function is_correct_queen_move (sx, sy, dx, dy) {
-    return true;
+    let changing_x = 0;
+    let changing_y = 0;
+    if (dx > sx) changing_x = +1;
+    if (dx < sx) changing_x = -1;
+    if (dy > sy) changing_y = +1;
+    if (dy < sy) changing_y = -1;
+    do {
+        sx += changing_x;
+        sy += changing_y;
+        if (sx == dx && sy == dy) // final of board
+            return true;
+    }  while (is_empty(sx, sy))
+    return false;
 }
 function is_correct_bishop_move (sx, sy, dx, dy) {
     // it moves vertically and horizontally
@@ -101,7 +113,7 @@ function is_correct_bishop_move (sx, sy, dx, dy) {
     let changing_x = 0;
     let changing_y = 0;
     if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_y = -1;
+    if (dx < sx) changing_x = -1;
     if (dy > sy) changing_y = +1;
     if (dy < sy) changing_y = -1;
 // move diagonally
@@ -128,7 +140,7 @@ function is_correct_rook_move (sx, sy, dx, dy) {
     let changing_x = 0;
     let changing_y = 0;
     if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_y = -1;
+    if (dx < sx) changing_x = -1;
     if (dy > sy) changing_y = +1;
     if (dy < sy) changing_y = -1;
     // the sum is only when it's two direcitional movement
@@ -144,7 +156,18 @@ function is_correct_rook_move (sx, sy, dx, dy) {
 }
 
 function is_correct_pawn_move (sx, sy, dx, dy) {
-    return true;
+    let changing_x = 0;
+    let changing_y = 0;
+    if (dx > sx) changing_x = +1;
+    if (dx < sx) changing_y = -1;
+    if (dy > sy) changing_y = +1;
+    if (dy < sy) changing_y = -1;
+    do {
+        sy += changing_y;
+        if (sx == dx && sy == dy) // final of board
+            return true;
+    }  while (is_empty(sx, sy))
+    return false;
 }
 
 // func that checks all matrix and sees if we can move FROM (1)
