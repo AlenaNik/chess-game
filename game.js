@@ -1,4 +1,10 @@
 let map = Array ();
+//what we see from the top.
+// info: empty, 1 - from here we can move, 2 - (to) where we can move
+let toparray = Array();
+
+let move_color = "white";
+
 // position of figues when you start the game
 function init_map () {
     // coordinates
@@ -15,7 +21,46 @@ function init_map () {
         ["ARROW", "", "PAWN", "", "", "", "pawn", "", "arrow"],
     ];
 }
+// adding ampty values to an array
+// set it to empty every time
+function init_toparray () {
+    toparray = [
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", "", "", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
 
+    ];
+}
+
+// function that will mark moves that we can move from
+function mark_moves_from() {
+    // clean top array before iteration
+    init_toparray();
+    for (let x = 0; x <= 8; x ++)
+        for (let y = 0; y <= 8; y ++)
+            if (can_move_from (x, y))
+                toparray [x] [y] = 1;
+}
+// return true or false if it's the same color, it can move
+function can_move_from (x, y) {
+    if (get_color (x, y) == move_color)
+        return true;
+    else
+        return false;
+}
+// which color is out figure now
+// if its capital letter is white, others are black
+function get_color (x, y) {
+    let figure = map [x] [y];
+    // if it's equal to itsels, its white, otherwise its black
+    return (figure.toUpperCase() == figure) ? "white" : "black";
+}
 
 function show_map() {
     html = "<table border='1' cellspacing='0'>";
@@ -23,7 +68,12 @@ function show_map() {
     {
         html += "<tr>";
         for (let x = 0; x <= 8; x ++) {
-            color = "#ead2a5"
+            // if top array is empty, leave color as it is.
+            if (toparray [x] [y] == " ")
+            color = "#ead2a5";
+            // else is ether 1(move from) or 2(move to)
+            else
+                color = toparray [x] [y] == "1" ? "#aaffaa" : "#83f0fa"
             html += "<td style='height: 50px; width: 50px; " + "background-color:  " + color +  ";"
             + "text-align: center;" +
             "'>";
@@ -35,5 +85,6 @@ function show_map() {
     document.getElementById("board").innerHTML=html;
 }
 init_map();
+init_toparray();
 show_map();
 
