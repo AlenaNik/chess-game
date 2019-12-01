@@ -1,5 +1,5 @@
 # Shogi Game Homework
-![Image description](https://i.ibb.co/SncQgQ5/3d8ebeb7826987b777dca939811bab4f.gif)
+![Image description](https://i.ibb.co/N9mwxjT/e756e525cd5bde1a15e4d4d374ce2122.gif)
 
 ## Run
 Donwload a repository and open in any browser or codepen https://codepen.io/AlenaNik/pen/xxbKmZM
