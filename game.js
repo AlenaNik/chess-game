@@ -3,7 +3,7 @@ let map = Array ();
 // info: empty, 1 - from here we can move, 2 - (to) where we can move
 let toparray = Array();
 
-let move_color = "white";
+let move_color = "black";
 
 // position of figues when you start the game
 function init_map () {
@@ -27,7 +27,7 @@ function init_toparray () {
     toparray = [
         [" ", " ", " ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", "", "", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -49,15 +49,15 @@ function mark_moves_from() {
 }
 // return true or false if it's the same color, it can move
 function can_move_from (x, y) {
-    if (get_color (x, y) == move_color)
-        return true;
-    else
-        return false;
+  return get_color(x, y) == move_color;
 }
 // which color is out figure now
 // if its capital letter is white, others are black
 function get_color (x, y) {
     let figure = map [x] [y];
+        if (figure == " ")
+            return " ";
+
     // if it's equal to itsels, its white, otherwise its black
     return (figure.toUpperCase() == figure) ? "white" : "black";
 }
@@ -85,6 +85,6 @@ function show_map() {
     document.getElementById("board").innerHTML=html;
 }
 init_map();
-init_toparray();
+mark_moves_from();
 show_map();
 
