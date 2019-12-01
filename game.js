@@ -111,11 +111,27 @@ function is_correct_knight_move (sx, sy, dx, dy) {
      (Math.abs (dx - sx) == 2 && Math.abs(dy - sy) == 1)
 }
 function is_correct_rook_move (sx, sy, dx, dy) {
-    return is_correct_line_move(sx, sy, dx, dy, "R" )
+    let changing_y = 0;
+    let changing_x = 0;
+    if (dx > sx) changing_x = +1;
+    if (dx < sx) changing_x = -1;
+    if (dy > sy) changing_y = +1;
+    if (dy < sy) changing_y = -1;
+    if (Math.abs (changing_x) + Math.abs(changing_y) != 1)
+        return false;
+    return true;
 }
 // arrow only moves forward
 function is_correct_arrow_move (sx, sy, dx, dy) {
-    return is_correct_line_move(sx, sy, dx, dy, "A" )
+    let changing_y = 0;
+    let changing_x = 0;
+    if (dx > sx) changing_x = +1;
+    if (dx < sx) changing_x = -1;
+    if (dy > sy) changing_y = +1;
+    if (dy < sy) changing_y = -1;
+    if (Math.abs (changing_x) + Math.abs(changing_y) != 1)
+        return false;
+    return true;
 }
 //
 function is_correct_gold_move (sx, sy, dx, dy) {
@@ -146,10 +162,13 @@ function is_correct_pawn_move (sx, sy, dx, dy) {
 
 // func that serves as a moving forward (to keep separating a repeated functionality (DRY))
 function is_correct_line_move (sx, sy, dx, dy, item) {
+    // how much we have to move sx and sy to get to dx dy
     let changing_x = 0;
     let changing_y = 0;
-    if (dx > sx) changing_x = +1;
-    if (dy > sy) changing_y = +1;
+    if (dx > sx) changing_x = +1; // dx is bigger, sum 1
+    if (dx < sx) changing_x = -1;
+    if (dy > sy) changing_y = +1; // if we move up, sum 1 to y
+    if (dy < sy) changing_y = -1;
     if(!is_correct_line_change(changing_y, changing_x, item))
             return false;
     do {
@@ -165,16 +184,14 @@ function is_correct_line_change(changing_y, changing_x, item) {
         return is_correct_rook_change (changing_x, changing_y);
     if (is_bishop (item))
         return is_correct_bishop_change (changing_x, changing_y);
-    if (is_arrow (item))
-        return is_correct_arrow_change (changing_x, changing_y);
     return false;
 }
 function is_correct_rook_change (changing_x, changing_y) {
-    return Math.abs (changing_x) + Math.abs(changing_y) == 1;
+    if (Math.abs (changing_x) + Math.abs(changing_y) != 1)
+        return false;
+    return true;
 }
-function is_correct_arrow_change (changing_x) {
-    return Math.abs (changing_x) - Math.abs(changing_x) <= 1;
-}
+
 function is_correct_bishop_change (changing_x, changing_y) {
     return Math.abs (changing_x) + Math.abs(changing_y) == 2;
 }
