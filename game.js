@@ -201,6 +201,7 @@ function is_correct_bishop_change (changing_x, changing_y) {
 // from the cell
 function mark_moves_from() {
     init_inf();
+    // Even thought the complexity of this algorithm is O(n^4), n gets very large, it might need optimization in the future.
     for (let sx = 0; sx <= 8; sx++)
         for (let sy = 0; sy <= 8; sy++)
             for (let dx = 0; dx <= 8; dx++)
