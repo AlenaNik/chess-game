@@ -2,7 +2,7 @@
 ![Image description](https://i.ibb.co/SncQgQ5/3d8ebeb7826987b777dca939811bab4f.gif)
 
 ## Run
-Donwload a repository and open in any browser
+Donwload a repository and open in any browser or codepen https://codepen.io/AlenaNik/pen/xxbKmZM
 
 ## Description
 ```
@@ -36,6 +36,7 @@ Rules: <br />
 Uppercase letters represent white figures, lowercase black. <br />
 Your turn is highlighted in green. Click to any cell to begin. If the figure is not green, you can't move it.<br />
 Blue highlight will show where the figure can move.<br />
+If you touch the figure, you have to move it, otherwise you lose turn. <br />
 
 Written in JavaScript (using FP approach: immutability, pure functions, avoid side effects, given the same input make the same output)
 ```
