@@ -1,6 +1,6 @@
 // global variables for matrix
-let map = Array();
-let inf = Array();
+let map = Array(9);
+let inf = Array(9);
 
 let move_color = "white";
 let move_from_x;
@@ -8,15 +8,16 @@ let move_from_y;
 
 function init_map() {
     map = [
-        // y0    y1    y2   y3   y4    y5    y6   y7
-        ["R", "P", "", "", "", "", "p", "r"], // x = 0 negros a la derecha!
-        ["N", "P", "", "", "", "", "p", "n"], // x = 1
-        ["B", "P", "", "", "", "", "p", "b"], // x = 2
-        ["Q", "P", "", "", "", "", "p", "q"], // x = 3
-        ["K", "P", "", "", "", "", "p", "k"], // x = 4
-        ["B", "P", "", "", "", "", "p", "b"], // x = 5
-        ["N", "P", "", "", "", "", "p", "n"], // x = 6
-        ["R", "P", "", "", "", "", "p", "r"] // x = 7
+        // y0    y1    y2   y3   y4    y5    y6   y7  y8
+        ["A", "", "P", "", "", "", "p", "", "a"], // x = 0 negros a la derecha!
+        ["N", "B", "P", "", "", "", "p", "b", "n"], // x = 1
+        ["S", "", "P", "", "", "", "p", "", "s"], // x = 2
+        ["G", "", "P", "", "", "", "p", "", "g"], // x = 3
+        ["K", "", "P", "", "", "", "p", "", "k"], // x = 4
+        ["G", "", "P", "", "", "", "p", "", "g"], // x = 5
+        ["S", "", "P", "", "", "", "p", "", "s"], // x = 6
+        ["N", "R", "P", "", "", "", "p", "r", "n"], // x = 7
+        ["A", "", "P", "", "", "", "p", "", "a"] // x = 8
     ];
 }
 function init_inf() {
@@ -25,14 +26,15 @@ function init_inf() {
             // empty cells to indicate where you could move
             // 1 means that you could go FROM this cell
             // 2 means that you can go TO that (or any) cell
-            [" ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
         ];
 }
 // func that sets condition if figure can move
@@ -53,29 +55,31 @@ function is_empty (x, y) {
 }
 //check if we are on board
 function on_map (x, y) {
-    return (x >= 0 && x <= 7 && y >= 0 && y <= 7)
+    return (x >= 0 && x <= 8 && y >= 0 && y <= 8)
 }
 // correct move! important func where all moves for figures are
 function is_correct_move (sx, sy, dx, dy) {
     let item = map [ sx ] [ sy ];
     if (is_king (item))
         return is_correct_king_move (sx, sy, dx, dy);
-    if (is_queen (item))
-        return is_correct_queen_move (sx, sy, dx, dy);
     if (is_bishop (item))
         return is_correct_bishop_move (sx, sy, dx, dy);
     if (is_knight (item))
         return is_correct_knight_move (sx, sy, dx, dy);
     if (is_rook (item))
         return is_correct_rook_move (sx, sy, dx, dy);
+    if (is_arrow (item))
+        return is_correct_arrow_move (sx, sy, dx, dy);
+    if (is_silver (item))
+        return is_correct_silver_move (sx, sy, dx, dy);
+    if (is_gold (item))
+        return is_correct_gold_move (sx, sy, dx, dy);
     if (is_pawn (item))
         return is_correct_pawn_move (sx, sy, dx, dy);
     return true;
 }
 // functions for each figure for black and whites
 const is_king = item => item.toUpperCase() == 'K';
-// queen func
-const is_queen = item => item.toUpperCase() == 'Q';
 // bishop func
 const is_bishop = item => item.toUpperCase() == 'B';
 // knight func
@@ -84,82 +88,68 @@ const is_knight = item => item.toUpperCase() == 'N';
 const is_rook = item => item.toUpperCase() == 'R';
 // pawn func
 const is_pawn = item => item.toUpperCase() == 'P';
-
+// arrow func
+const is_arrow = item => item.toUpperCase() == 'A';
+// gold func
+const is_gold = item => item.toUpperCase() == 'G';
+// silver func
+const is_silver = item => item.toUpperCase() == 'S';
 
 // correct movements for each figure
 function is_correct_king_move (sx, sy, dx, dy) {
     if (Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1)
     return true;
 }
-function is_correct_queen_move (sx, sy, dx, dy) {
-    let changing_x = 0;
-    let changing_y = 0;
-    if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_x = -1;
-    if (dy > sy) changing_y = +1;
-    if (dy < sy) changing_y = -1;
-    do {
-        sx += changing_x;
-        sy += changing_y;
-        if (sx == dx && sy == dy) // final of board
-            return true;
-    }  while (is_empty(sx, sy))
-    return false;
-}
+
 function is_correct_bishop_move (sx, sy, dx, dy) {
-    // it moves vertically and horizontally
-    // if we move up, y is bigger, x is the same
-    // if we are going left and right x is changin, y is the same
-    let changing_x = 0;
-    let changing_y = 0;
-    if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_x = -1;
-    if (dy > sy) changing_y = +1;
-    if (dy < sy) changing_y = -1;
-// move diagonally
-   if (Math.abs (changing_x) + Math.abs(changing_y) != 2)
-       return false;
-    do {
-        sx += changing_x;
-        sy += changing_y;
-        if (sx == dx && sy == dy) // final of board
-            return true;
-    }  while (is_empty(sx, sy))
-    return false;
+    return is_correct_line_move(sx, sy, dx, dy, "B" )
 }
 
 function is_correct_knight_move (sx, sy, dx, dy) {
-    // module function to see the difference from
+    // module function to see the difference
     return (Math.abs (dx - sx) == 1 && Math.abs(dy - sy) == 2) ||
      (Math.abs (dx - sx) == 2 && Math.abs(dy - sy) == 1)
 }
 function is_correct_rook_move (sx, sy, dx, dy) {
-    // it moves vertically and horizontally
-    // if we move up, y is bigger, x is the same
-    // if we are going left and right x is changin, y is the same
-    let changing_x = 0;
     let changing_y = 0;
+    let changing_x = 0;
     if (dx > sx) changing_x = +1;
     if (dx < sx) changing_x = -1;
     if (dy > sy) changing_y = +1;
     if (dy < sy) changing_y = -1;
-    // the sum is only when it's two direcitional movement
-    if (Math.abs(changing_x) + Math.abs(changing_y) != 1)
+    if (Math.abs (changing_x) + Math.abs(changing_y) != 1)
         return false;
-    do {
-        sx += changing_x;
-        sy += changing_y;
-        if (sx == dx && sy == dy) // final of board
-            return true;
-    }  while (is_empty(sx, sy))
+    return true;
+}
+// arrow only moves forward
+function is_correct_arrow_move (sx, sy, dx, dy) {
+    let changing_y = 0;
+    let changing_x = 0;
+    if (dx > sx) changing_x = +1;
+    if (dx < sx) changing_x = -1;
+    if (dy > sy) changing_y = +1;
+    if (dy < sy) changing_y = -1;
+    if (Math.abs (changing_x) + Math.abs(changing_y) != 1)
         return false;
+    return true;
+}
+//
+function is_correct_gold_move (sx, sy, dx, dy) {
+    if (Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1)
+        return true;
 }
 
+// silver only moves forward
+function is_correct_silver_move (sx, sy, dx, dy) {
+    if (Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1)
+        return true;
+}
+
+// pawn only moves forward
 function is_correct_pawn_move (sx, sy, dx, dy) {
-    let changing_x = 0;
     let changing_y = 0;
     if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_y = -1;
+    if (dx < sx) changing_x = -1;
     if (dy > sy) changing_y = +1;
     if (dy < sy) changing_y = -1;
     do {
@@ -169,15 +159,52 @@ function is_correct_pawn_move (sx, sy, dx, dy) {
     }  while (is_empty(sx, sy))
     return false;
 }
+
+// func that serves as a moving forward (to keep separating a repeated functionality (DRY))
+function is_correct_line_move (sx, sy, dx, dy, item) {
+    // how much we have to move sx and sy to get to dx dy
+    let changing_x = 0;
+    let changing_y = 0;
+    if (dx > sx) changing_x = +1; // dx is bigger, sum 1
+    if (dx < sx) changing_x = -1;
+    if (dy > sy) changing_y = +1; // if we move up, sum 1 to y
+    if (dy < sy) changing_y = -1;
+    if(!is_correct_line_change(changing_y, changing_x, item))
+            return false;
+    do {
+        sx += changing_x;
+        sy += changing_y;
+        if (sx == dx && sy == dy) // final of board
+            return true;
+    }  while (is_empty(sx, sy));
+    return false;
+}
+function is_correct_line_change(changing_y, changing_x, item) {
+    if (is_rook (item))
+        return is_correct_rook_change (changing_x, changing_y);
+    if (is_bishop (item))
+        return is_correct_bishop_change (changing_x, changing_y);
+    return false;
+}
+function is_correct_rook_change (changing_x, changing_y) {
+    if (Math.abs (changing_x) + Math.abs(changing_y) != 1)
+        return false;
+    return true;
+}
+
+function is_correct_bishop_change (changing_x, changing_y) {
+    return Math.abs (changing_x) + Math.abs(changing_y) == 2;
+}
+
 
 // func that checks all matrix and sees if we can move FROM (1)
 // from the cell
 function mark_moves_from() {
     init_inf();
-    for (let sx = 0; sx <= 7; sx++)
-        for (let sy = 0; sy <= 7; sy++)
-            for (let dx = 0; dx <= 7; dx++)
-                for (let dy = 0; dy <= 7; dy++)
+    for (let sx = 0; sx <= 8; sx++)
+        for (let sy = 0; sy <= 8; sy++)
+            for (let dx = 0; dx <= 8; dx++)
+                for (let dy = 0; dy <= 8; dy++)
                     // if we can move from sx sy to any other dx dy
                     if (can_move (sx, sy, dx, dy))
                     // you you can move FROM that cell, put 1 (TO is going to be two)
@@ -189,8 +216,8 @@ function mark_moves_from() {
 // d - destination where we are  moving to
 function mark_moves_to () {
     init_inf();
-    for (let x = 0; x <= 7; x++)
-        for (let y = 0; y <= 7; y++)
+    for (let x = 0; x <= 8; x++)
+        for (let y = 0; y <= 8; y++)
             // if we can move from sx sy to any other dx dy
            if (can_move ( move_from_x, move_from_y, x, y))
             // you you can move TO that cell, put 2
@@ -253,14 +280,14 @@ function show_map() {
     // creating 2D arrays https://p5js.org/examples/arrays-array-2d.html
 
     layout = "<table>";
-    for (let y = 7; y >= 0; y--) {
+    for (let y = 8; y >= 0; y--) {
         layout += "<tr>";
-        layout += "<td>" + y + "</td>";
-        for (let x = 0; x <= 7; x++) {
+        layout += "<td></td>";
+        for (let x = 0; x <= 8; x++) {
             if (inf [x] [y] == " ")
-                color = (x + y) % 2 ? "#eeffee" : "#abcdef";
+                color = "#e7b751";
             else
-                color = inf[x] [y] == "1" ? "#aaffaa" : "#ffaaaa";
+                color = inf[x] [y] == "1" ? "#aaffaa" : "#47e5fa";
             layout += "<td class='board' style='background-color: " + color + "; " +
                //Coordinated of x and y at the moment of click
                 "' onclick='click_box(" + x + ", " + y + "); '>";

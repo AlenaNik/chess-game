@@ -11,9 +11,18 @@
 <body>
 <div id="chess"></div>
 <div id="info"></div>
-<p>Click on any green cell to start</p>
+<p>You turn is highlighted in green. Click to any cell to begin. If the figure is not green, you can't move it</p>
 <p>Blue highlight will show where the figure can move</p>
-
+<ul>
+    <li>"K" - king - 王 moves to any of it's 8 near cells</li>
+    <li>"Q" - queen - 飛 moves to any direction </li>
+    <li>"B" - bishop - 角 moves diagonally</li>
+    <li>"P" - pawn - 歩 moves only to one cell forward</li>
+    <li>"A" - arrow - 香 only moves forward </li>
+    <li>"N" - knight - 桂 can "jump over" all other pieces, moves to a square that is two squares away horizontally and one square vertically </li>
+    <li>"S" - silver - 銀 moves to any diagonal cell and forward </li>
+    <li>"G" - gold - 金 moves to any cell except the one behind diagonally </li>
+</ul>
 </body>
 <script src="./game.js"></script>
 </html>
