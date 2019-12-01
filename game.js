@@ -7,9 +7,11 @@ let move_from_x;
 let move_from_y;
 
 function init_map() {
+    // I'm not using pictures or japanese letter, because of toUpperCase method
+    // after, for checking it my figure is white or black
     map = [
         // y0    y1    y2   y3   y4    y5    y6   y7  y8
-        ["A", "", "P", "", "", "", "p", "", "a"], // x = 0 negros a la derecha!
+        ["A", "", "P", "", "", "", "p", "", "a"], // x = 0 black are lowercase!
         ["N", "B", "P", "", "", "", "p", "b", "n"], // x = 1
         ["S", "", "P", "", "", "", "p", "", "s"], // x = 2
         ["G", "", "P", "", "", "", "p", "", "g"], // x = 3
@@ -107,6 +109,8 @@ function is_correct_bishop_move (sx, sy, dx, dy) {
 
 function is_correct_knight_move (sx, sy, dx, dy) {
     // module function to see the difference
+    // The Math.abs() function returns the absolute value of a number
+    // The absolute value of a number is never negative
     return (Math.abs (dx - sx) == 1 && Math.abs(dy - sy) == 2) ||
      (Math.abs (dx - sx) == 2 && Math.abs(dy - sy) == 1)
 }
@@ -141,18 +145,20 @@ function is_correct_gold_move (sx, sy, dx, dy) {
 
 // silver only moves forward
 function is_correct_silver_move (sx, sy, dx, dy) {
-    if (Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1)
+    if (Math.abs (dx - sx ) <= 2 && Math.abs (dy - sy) <= 2 &&
+        Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1
+    )
         return true;
 }
 
 // pawn only moves forward
 function is_correct_pawn_move (sx, sy, dx, dy) {
     let changing_y = 0;
-    if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_x = -1;
+    let changing_x = 0;
     if (dy > sy) changing_y = +1;
     if (dy < sy) changing_y = -1;
     do {
+        sx += changing_x;
         sy += changing_y;
         if (sx == dx && sy == dy) // final of board
             return true;
