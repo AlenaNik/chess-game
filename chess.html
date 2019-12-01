@@ -6,22 +6,29 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="game.css">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <title>Game</title>
 </head>
 <body>
-<div id="chess"></div>
-<div id="info"></div>
-<p>You turn is highlighted in green. Click to any cell to begin. If the figure is not green, you can't move it</p>
-<p>Blue highlight will show where the figure can move</p>
-<ul>
-    <li>"K" - king - 王 moves to any of it's 8 near cells</li>
-    <li>"B" - bishop - 角 moves diagonally</li>
-    <li>"P" - pawn - 歩 moves only to one cell forward</li>
-    <li>"A" - arrow - 香 only moves forward </li>
-    <li>"N" - knight - 桂 can "jump over" all other pieces, moves to a square that is two squares away horizontally and one square vertically </li>
-    <li>"S" - silver - 銀 moves to any diagonal cell and forward </li>
-    <li>"G" - gold - 金 moves to any cell except the one behind diagonally </li>
-</ul>
+<div class="flex">
+<div id="chess" class="p-10 flex-1"></div>
+<div class="flex-1 max-w-lg rounded overflow-hidden shadow-lg p-4 m-6 bg-white">
+    <p class="text-gray-700 text-base">You turn is highlighted in green. Click to any cell to begin. If the figure is not green, you can't move it</p>
+    <p class="text-gray-700 text-base">Blue highlight will show where the figure can move. If you touch the figure you have to move it</p>
+    <ul>
+        <li class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 m-2">"K" - king - 王 moves to any of it's 8 near cells</li>
+        <li class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 m-2">"B" - bishop - 角 moves diagonally</li>
+        <li class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 m-2">"P" - pawn - 歩 moves only to one cell forward</li>
+        <li class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 m-2">"A" - arrow - 香 only moves forward </li>
+        <li class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 m-2">"N" - knight - 桂 can "jump over" all other pieces, moves to a square that is two squares away horizontally and one square vertically </li>
+        <li class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 m-2">"S" - silver - 銀 moves to any diagonal cell and forward </li>
+        <li class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 m-2">"G" - gold - 金 moves to any cell except the one behind diagonally </li>
+    </ul>
+    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center m-2">
+        <a href="https://github.com/AlenaNik/chess-game">GitHub</a>
+    </button>
+</div>
+</div>
 </body>
 <script src="./game.js"></script>
 </html>
