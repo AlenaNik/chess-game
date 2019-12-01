@@ -62,8 +62,6 @@ function is_correct_move (sx, sy, dx, dy) {
     let item = map [ sx ] [ sy ];
     if (is_king (item))
         return is_correct_king_move (sx, sy, dx, dy);
-    if (is_queen (item))
-        return is_correct_queen_move (sx, sy, dx, dy);
     if (is_bishop (item))
         return is_correct_bishop_move (sx, sy, dx, dy);
     if (is_knight (item))
@@ -82,8 +80,6 @@ function is_correct_move (sx, sy, dx, dy) {
 }
 // functions for each figure for black and whites
 const is_king = item => item.toUpperCase() == 'K';
-// queen func
-const is_queen = item => item.toUpperCase() == 'Q';
 // bishop func
 const is_bishop = item => item.toUpperCase() == 'B';
 // knight func
@@ -104,94 +100,27 @@ function is_correct_king_move (sx, sy, dx, dy) {
     if (Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1)
     return true;
 }
-function is_correct_queen_move (sx, sy, dx, dy) {
-    let changing_x = 0;
-    let changing_y = 0;
-    if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_x = -1;
-    if (dy > sy) changing_y = +1;
-    if (dy < sy) changing_y = -1;
-    do {
-        sx += changing_x;
-        sy += changing_y;
-        if (sx == dx && sy == dy) // final of board
-            return true;
-    }  while (is_empty(sx, sy))
-    return false;
-}
+
 function is_correct_bishop_move (sx, sy, dx, dy) {
-    // it moves vertically and horizontally
-    // if we move up, y is bigger, x is the same
-    // if we are going left and right x is changin, y is the same
-    let changing_x = 0;
-    let changing_y = 0;
-    if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_x = -1;
-    if (dy > sy) changing_y = +1;
-    if (dy < sy) changing_y = -1;
-// move diagonally
-   if (Math.abs (changing_x) + Math.abs(changing_y) != 2)
-       return false;
-    do {
-        sx += changing_x;
-        sy += changing_y;
-        if (sx == dx && sy == dy) // final of board
-            return true;
-    }  while (is_empty(sx, sy));
-    return false;
+    return is_correct_line_move(sx, sy, dx, dy, "B" )
 }
 
 function is_correct_knight_move (sx, sy, dx, dy) {
-    // module function to see the difference from
+    // module function to see the difference
     return (Math.abs (dx - sx) == 1 && Math.abs(dy - sy) == 2) ||
      (Math.abs (dx - sx) == 2 && Math.abs(dy - sy) == 1)
 }
 function is_correct_rook_move (sx, sy, dx, dy) {
-    // it moves vertically and horizontally
-    // if we move up, y is bigger, x is the same
-    // if we are going left and right x is changin, y is the same
-    let changing_x = 0;
-    let changing_y = 0;
-    if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_x = -1;
-    if (dy > sy) changing_y = +1;
-    if (dy < sy) changing_y = -1;
-    // the sum is only when it's two direcitional movement
-    if (Math.abs(changing_x) + Math.abs(changing_y) != 1)
-        return false;
-    do {
-        sx += changing_x;
-        sy += changing_y;
-        if (sx == dx && sy == dy) // final of board
-            return true;
-    } while (is_empty(sx, sy));
-    return false;
+    return is_correct_line_move(sx, sy, dx, dy, "R" )
 }
 // arrow only moves forward
 function is_correct_arrow_move (sx, sy, dx, dy) {
-
- return true;
+    return is_correct_line_move(sx, sy, dx, dy, "A" )
 }
-// gold only moves forward
+//
 function is_correct_gold_move (sx, sy, dx, dy) {
-    let changing_x = 0;
-    let changing_y = 0;
-    if (dx > sx) changing_x = +1;
-    if (dx < sx) changing_x = -1;
-    if (dy > sy) changing_y = +1;
-    if (dy < sy) changing_y = -1;
-    // the sum is only when it's two direcitional movement
-    if (Math.abs(changing_x) + Math.abs(changing_y) != 1 && Math.abs (changing_x) + Math.abs(changing_y) != 2)
-        return false;
-    do {
-        sx += changing_x;
-        sy += changing_y;
-        if (sx == dx && sy == dy) // final of board
-            return true;
-        if (map [sx] [sy] != " ")
-            return false;
-    }  while (on_map(sx, sy));
-    return true;
+    if (Math.abs (dx - sx ) <= 1 && Math.abs (dy - sy) <= 1)
+        return true;
 }
 
 // silver only moves forward
@@ -200,10 +129,8 @@ function is_correct_silver_move (sx, sy, dx, dy) {
         return true;
 }
 
-
 // pawn only moves forward
 function is_correct_pawn_move (sx, sy, dx, dy) {
-    let changing_x = 0;
     let changing_y = 0;
     if (dx > sx) changing_x = +1;
     if (dx < sx) changing_x = -1;
@@ -216,6 +143,42 @@ function is_correct_pawn_move (sx, sy, dx, dy) {
     }  while (is_empty(sx, sy))
     return false;
 }
+
+// func that serves as a moving forward (to keep separating a repeated functionality (DRY))
+function is_correct_line_move (sx, sy, dx, dy, item) {
+    let changing_x = 0;
+    let changing_y = 0;
+    if (dx > sx) changing_x = +1;
+    if (dy > sy) changing_y = +1;
+    if(!is_correct_line_change(changing_y, changing_x, item))
+            return false;
+    do {
+        sx += changing_x;
+        sy += changing_y;
+        if (sx == dx && sy == dy) // final of board
+            return true;
+    }  while (is_empty(sx, sy));
+    return false;
+}
+function is_correct_line_change(changing_y, changing_x, item) {
+    if (is_rook (item))
+        return is_correct_rook_change (changing_x, changing_y);
+    if (is_bishop (item))
+        return is_correct_bishop_change (changing_x, changing_y);
+    if (is_arrow (item))
+        return is_correct_arrow_change (changing_x, changing_y);
+    return false;
+}
+function is_correct_rook_change (changing_x, changing_y) {
+    return Math.abs (changing_x) + Math.abs(changing_y) == 1;
+}
+function is_correct_arrow_change (changing_x) {
+    return Math.abs (changing_x) - Math.abs(changing_x) <= 1;
+}
+function is_correct_bishop_change (changing_x, changing_y) {
+    return Math.abs (changing_x) + Math.abs(changing_y) == 2;
+}
+
 
 // func that checks all matrix and sees if we can move FROM (1)
 // from the cell
