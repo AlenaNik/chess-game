@@ -7,8 +7,6 @@ let move_from_x;
 let move_from_y;
 
 function init_map() {
-    // I'm not using pictures or japanese letter, because of toUpperCase method
-    // after, for checking it my figure is white or black
     map = [
         // y0    y1    y2   y3   y4    y5    y6   y7  y8
         ["A", "", "P", "", "", "", "p", "", "a"], // x = 0 black are lowercase!
@@ -108,9 +106,6 @@ function is_correct_bishop_move (sx, sy, dx, dy) {
 }
 
 function is_correct_knight_move (sx, sy, dx, dy) {
-    // module function to see the difference
-    // The Math.abs() function returns the absolute value of a number
-    // The absolute value of a number is never negative
     return (Math.abs (dx - sx) == 1 && Math.abs(dy - sy) == 2) ||
      (Math.abs (dx - sx) == 2 && Math.abs(dy - sy) == 1)
 }
@@ -165,10 +160,7 @@ function is_correct_pawn_move (sx, sy, dx, dy) {
     }  while (is_empty(sx, sy))
     return false;
 }
-
-// func that serves as a moving forward (to keep separating a repeated functionality (DRY))
 function is_correct_line_move (sx, sy, dx, dy, item) {
-    // how much we have to move sx and sy to get to dx dy
     let changing_x = 0;
     let changing_y = 0;
     if (dx > sx) changing_x = +1; // dx is bigger, sum 1
@@ -207,7 +199,6 @@ function is_correct_bishop_change (changing_x, changing_y) {
 // from the cell
 function mark_moves_from() {
     init_inf();
-    // Even thought the complexity of this algorithm is O(n^4), n gets very large, it might need optimization in the future.
     for (let sx = 0; sx <= 8; sx++)
         for (let sy = 0; sy <= 8; sy++)
             for (let dx = 0; dx <= 8; dx++)
