@@ -1,9 +1,6 @@
 # Shogi Game Homework
 ![Image description](https://i.ibb.co/N9mwxjT/e756e525cd5bde1a15e4d4d374ce2122.gif)
 
-## Run
-Donwload a repository and open in any browser or codepen https://codepen.io/AlenaNik/pen/xxbKmZM
-
 ## Description
 ```
 Of Japanese origins, Shogi is played on a 9 by 9 board, and the object is to capture the opponent's king. 
@@ -37,12 +34,3 @@ Uppercase letters represent white figures, lowercase black. <br />
 Your turn is highlighted in green. Click to any cell to begin. If the figure is not green, you can't move it.<br />
 Blue highlight will show where the figure can move.<br />
 If you touch the figure, you have to move it, otherwise you lose turn. <br />
-
-Written in JavaScript (using FP approach: immutability, pure functions, avoid side effects, given the same input make the same output)
-```
-* + movimiento de piezas
-* (pendiente) movimiento de piezas promocionadas
-* (pendiente) re introducir piezas capturadas
-* (pendiente) jaque y jaque mate 
-
-```
